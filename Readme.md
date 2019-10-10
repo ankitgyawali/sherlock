@@ -1,34 +1,87 @@
 ## sherlock
 
-- A tool to discover hosts on local network cidrs.
-- TCP port scan provided host.
+- Tool to perform port sweep & discover host on provided cidr block.
+- Performs port scan specific host.
 - Create a report of discovered hosts & available ports.
-- Monitoring and alerting agent on host & port combination.
+- Monitoring & alerting agent for a host & port combination.
+
+
+## Testing project features
+
+### CLI Commands
 
 ### Testing from Command Line directly
 
-Three main drivers
+Three core scripts:
 
-- python src/discover.py $cidr $threads
-    - python src/discover.py 10.0.20.0/24 256
+#### discover.py [Sweep]
+
+Sweeps provided cidr block (default: 127.0.0.1/32) with provided number of threads (default: 256) for provided port to sweep  (default: 80).
+- python src/discover.py $cidr $threads $port_to_sweep
+    - `python src/discover.py`
+    - `python src/discover.py 127.0.0.1/32 12 5000`
+
+#### scan.py [Scan]
+
+Scans provided host for open ports (default: 127.0.0.1).
+
+- python src/scan.py $host_ip_to_sweep
+    - `python src/scan.py`
+    - `python src/scan.py 127.0.0.1`
+    - `python src/scan.py 8.8.8.8`
+
+#### monitor.py [Monitor]
+
+Monitor provided host for open ports (default: 127.0.0.1) every given interval (default 5 sec).
+
+- python src/monitor.py $host_ip_to_sweep
+    - `python src/monitor.py`
+    - `python src/monitor.py 127.0.0.1 1`
+    - `python src/monitor.py 8.8.8.8 60`
+
+### UI Features
+
+Given the project is running at `http://localhost:5000/` a basic workflow would look like:
+
+- Step 1: For Option #1 - Enter appropriate CIDR/Thread/Port to sweep on option 1. This will take you to a page with discovered "hosts" with open ports.
+- Step 2: Page `/discover` can be used to either save report on the backend. Or perform a full TCP port scan from the list of discovered hosts.
+- Step 3: Page `/scan` can further be used to monitor the host for discoverd ports or save report of open ports on the backend.
+- Step 4: Back to control center (main page).
+- Step 5: Option #2 - works similarly by redirecting to `/scan` but now the user can explicitly provide a host ip instead of choosing host from list of discovered ips on a cidr block.
+- Step 6: This can also be a public ip as long as they are reachable.
+- Step 7: The `/scan` page also contains the monitor feature on `/monitor` which compares a trailing value and current value to detect any changes in port. This comparison happens after a call to the backend to get active port which is executed in a setintervaltimeout on javascript [works differently than backend's `src/monitor.py`].
+- Step 8: The `/monitor` page has a "reset alert" buttons which simply hides the "red panic HTML bootstrap div" back to green div.
+- Step 9: Back to control center from `/scan`.
+- Step 10: Option #3 - Simply loads any previously saved reports from `/discover` & `/scan` into the UI if any.
 
 
-### Docker build 
+## Running project locally
 
-`docker build --tag sherlock .`
+### Running flask app
 
+- From project root install requirements with `pip install -r requirements.txt`.
+- Run `python init.py` to start Flask app or `FLASK_APP="init.py" flask run`.
+
+### Running UI via docker
+
+- Pull latest docker image from docker hub.
+`docker pull ankitgyawali/sherlock:latest`
+
+- Run docker image bound to your localhost:500
+`docker run -d -p 5000:5000 docker.io/ankitgyawali/sherlock:latest`
+
+
+## Others
 
 ### Disabled Pylint(s)
 
-Needed to disable line too long - scan.py
+Disabled line too long on - scan.py:
 - pylint: disable=C0301
 
-Needed to try catch all exception - discover.py:
+Disabled try catch all exception - discover.py:
 - pylint: disable=W0702
 
 
-### Things left to do
+### Screenshots
 
-- Docker
-- Documentation/Demo for usage
-- Prep for submission
+Screenshots provided on `docs` folder of the repo.

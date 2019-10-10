@@ -1,103 +1,86 @@
 <html>
-    <head>
-        <title>
-            Sherlock - Interact
-        </title>
-    
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-    </head>
-
-    <body>
-        
-        <div class="alert alert-primary" role="alert">
-            <h1> <center> Sherlock - Discover host(s) </center> </h1>
-          </div>
-
-          <div class="jumbotron jumbotron-fluid">
-            <div class="container">
-              <h1 class="display-4">Interact with identified hosts</h1>
-              <a href="/">Go back to control center</a><br><br>
-              <p class="lead">List of discovered hosts:
-
-                <ul>
-                  {% for host_port in maps %}
-                      <li>{{ host_port[0] }}  - Port <a href="//{{ host_port[0] }}:{{port}}" target="_blank">{{ port }}</a>  {% if host_port[1] %} OPEN {% endif %} {% if not host_port[1] %} CLOSED {% endif %} -  <a href="/scan?ipadr={{host_port[0]}}">Perform Full TCP Port Scan</a></li>
-                  {% endfor %}
-                </ul>
-
-              </p>
-
-
-              <p>
-                  <br>
-                  <br>
-                  <br>
-                  <br>
-                  <br>
-                  <br>
-                  <br>
-                  <br>
-                  <br>
-
-                Click on one of the host to perforam a TCP port scan with default preset.
-                <br>
-                This will return a list of available ports on host of interest.
-
-              </p>
-                <div class="jumbotron jumbotron-fluid">
-                   <div class="container">
-                          <button class="btn btn-primary" type="submit" id="report">SAVE REPORT OF DISCOVERED HOSTS on "discovery.sherlock" </button>
-                       </div>
-                   </div>
-
-            </div>
-
-
-            
-          </div>
-
-
-
-    </body>
-
-    <!-- Footer -->
-<footer class="page-footer font-small blue pt-4"> <div class="container-fluid text-center text-md-left"> <div class="row"> <div class="col-md-6 mt-md-0 mt-3">
-        <h5>Sherlock - Network Forensics</h5>
-        <p>Implemented as part of 2019 MSIT BIDA  <a href="https://api.heinz.cmu.edu/media/95-898_272.pdf" target="_blank">course</a>.</p>
-      </div>
-      <div class="col-md-3 mb-md-0 mb-3"></div>
-     
-      <div class="col-md-3 mb-md-0 mb-3">
-        <h5>Info</h5>
-        <ul class="list-unstyled">
-          <li>
-            <a href="https://github.com/ankitgyawali/sherlock" target="_blank">Github</a>
-          </li>
-          <li>
-            <a href="https://api.heinz.cmu.edu/media/95-898_272.pdf" target="_blank">CMU</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-  </div>
-  <div class="footer-copyright text-center py-3">© 2019 Copyright: <a href="https://github.com/ankitgyawali/sherlock" target="_blank"> Sherlock</a> </div>
-</footer>
-    <!-- Footer -->
-
-<script type="text/javascript"> 
-      $(document).ready(function() {
-          $('#report').on('click', function() {
-            $.post('/report_discovery',  { hosts: '{{hosts|tojson }}' }, // url
-              function (data, textStatus, jqXHR) {  // success callback
-                alert('Created report file "discovery.sherlock" on backend!');
-            });
-          });
-    });
-</script>
-
+  <head>
+     <title>
+        Sherlock - Interact
+     </title>
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+     <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </head>
+  <body>
+     <div class="alert alert-primary" role="alert">
+        <h1>
+           <center> Sherlock - Discover host(s) </center>
+        </h1>
+     </div>
+     <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+           <h1 class="display-4">Interact with identified hosts</h1>
+           <a href="/">Go back to control center</a><br><br>
+           <p class="lead">List of discovered hosts:
+           <ul>
+              {% for host_port in maps %}
+              <li>{{ host_port[0] }}  - Port <a href="//{{ host_port[0] }}:{{port}}" target="_blank">{{ port }}</a>  {% if host_port[1] %} OPEN {% endif %} {% if not host_port[1] %} CLOSED {% endif %} -  <a href="/scan?ipadr={{host_port[0]}}">Perform Full TCP Port Scan</a></li>
+              {% endfor %}
+           </ul>
+           </p>
+           <p>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              Click on one of the host to perforam a TCP port scan with default preset.
+              <br>
+              This will return a list of available ports on host of interest.
+           </p>
+           <div class="jumbotron jumbotron-fluid">
+              <div class="container">
+                 <button class="btn btn-primary" type="submit" id="report">SAVE REPORT OF DISCOVERED HOSTS on "discovery.sherlock" </button>
+              </div>
+           </div>
+        </div>
+     </div>
+  </body>
+  <!-- Footer -->
+  <footer class="page-footer font-small blue pt-4">
+     <div class="container-fluid text-center text-md-left">
+        <div class="row">
+           <div class="col-md-6 mt-md-0 mt-3">
+              <h5>Sherlock - Network Forensics</h5>
+              <p>Implemented as part of 2019 MSIT BIDA  <a href="https://api.heinz.cmu.edu/media/95-898_272.pdf" target="_blank">course</a>.</p>
+           </div>
+           <div class="col-md-3 mb-md-0 mb-3"></div>
+           <div class="col-md-3 mb-md-0 mb-3">
+              <h5>Info</h5>
+              <ul class="list-unstyled">
+                 <li>
+                    <a href="https://github.com/ankitgyawali/sherlock" target="_blank">Github</a>
+                 </li>
+                 <li>
+                    <a href="https://api.heinz.cmu.edu/media/95-898_272.pdf" target="_blank">CMU</a>
+                 </li>
+              </ul>
+           </div>
+        </div>
+     </div>
+     <div class="footer-copyright text-center py-3">© 2019 Copyright: <a href="https://github.com/ankitgyawali/sherlock" target="_blank"> Sherlock</a> </div>
+  </footer>
+  <!-- Footer -->
+  <script type="text/javascript"> 
+     $(document).ready(function() {
+         $('#report').on('click', function() {
+           $.post('/report_discovery',  { hosts: '{{hosts|tojson }}' }, // url
+             function (data, textStatus, jqXHR) {  // success callback
+               alert('Created report file "discovery.sherlock" on backend!');
+           });
+         });
+     });
+  </script>
 </html>
+
