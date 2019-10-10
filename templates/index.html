@@ -1,0 +1,167 @@
+
+
+<html>
+    <head>
+       <title>
+          Sherlock - Network Forensics Tool
+       </title>
+       <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+       <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+       <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </head>
+    <body>
+       <div class="alert alert-primary" role="alert">
+          <h1>
+             <center> Sherlock - Network Forensics Tool </center>
+          </h1>
+       </div>
+
+
+       <form action="/discover" method="GET">
+          <div class="jumbotron jumbotron-fluid">
+             <div class="container">
+                <h1 class="display-4">Option #1: Port Sweep/Network discovery</h1>
+                <p class="lead">Please provide a CIDR block to scan:<br>
+                   Common Private IP spaces (<a href="https://tools.ietf.org/html/rfc1918" target="_blank">RFC 1918</a>): <u>192.168.0.0/16</u> [65536 hosts], <u>172.16.0.0/12</u> [1048576 hosts], <u>10.0.0.0/8</u> [16777216 hosts]
+                   Common Public IP Cidr: <u>8.8.8.8/32</u>, <u>1.1.1.1/32</u> [Any cidr with reachable hosts can be provided for discovery.]<br><br>
+                   <i>Please do use at your own discretion while scanning public ips or hosts/ports that you don't control as that can be considered a DDoS attack.</i>
+                </p>
+                Enter CIDR:
+                <div class="input-group mb-3">
+                   <input type="text" class="form-control input-lg" size="200" name="cidr" value="8.8.8.8/32"  placeholder="CIDR block to scan" default="8.8.8.8/32"><br>
+                </div>
+                Number of threads to use:
+                <div class="input-group mb-3">
+                   <input type="number" class="form-control input-lg" size="200" name="threads" value="255"  placeholder="Threads to use">
+                </div>
+                Port to sweep (Single):
+                <div class="input-group mb-3">
+                  <input type="number" class="form-control input-lg" size="200" name="port" value="80"  placeholder="Port to sweep">
+               </div>
+                <div class="input-group mb-3">
+                   <button class="btn btn-primary" type="submit" id="button-addon2">DISCOVER</button>
+                </div>
+             </div>
+          </div>
+       </form>
+
+       <form action="/scan" method="GET">
+        <div class="jumbotron jumbotron-fluid">
+           <div class="container">
+              <h1 class="display-4">Option #2: Port Scan/Port Monitor</h1>
+              <p class="lead">Please provide a <b>single</b> IP to probe (You can monitor ports of a host after a complete scan):
+               <br><br>
+              <i>Please do use at your own discretion while scanning public ips or hosts/ports that you don't control as that can be considered a DDoS attack.</i><br>
+              </p>
+              Enter IP address(es) to probe: 
+              
+              <div class="input-group mb-3">
+                 <input type="text" class="form-control input-lg" size="200" name="ipadr" value="192.168.1.1"  placeholder="CIDR block to scan" default="192.168.1.1"><br>
+              </div>
+
+              <div class="input-group mb-3">
+                 <button class="btn btn-primary" type="submit" id="button-addon2">SCAN FOR ALL PORTS</button> 
+              </div>
+           </div>
+        </div>
+     </form>
+
+
+      <div class="jumbotron jumbotron-fluid">
+         <div class="container">
+            <h1 class="display-4">Option #3: Load existing reports from file.</h1>
+            <p class="lead">Open existing reports from "discovery.sherlock" and "scan.sherlock".<br>
+            </p>
+            
+            <div class="input-group mb-3" id="watson">
+               Report
+            </div>
+
+         <form action="/" method="GET">
+
+            <div class="input-group mb-3">
+               <input type="hidden" id="report" name="report" value="sherlock">
+               <button class="btn btn-primary" type="submit" id="button-addon2">LOAD REPORTS</button>
+            </div>
+         </form>
+
+         <form action="/" method="GET">
+
+            <div class="input-group mb-3">
+               <input type="hidden" id="report" name="report" value="watson">
+               <button class="btn btn-primary" type="submit" id="button-addon2">HIDE REPORTS</button>
+            </div>
+         </form>
+
+
+         </div>
+      </div>
+
+   <script type="text/javascript"> 
+      $(document).ready(function() {
+         var url = window.location.href;
+         if(url.indexOf("report=sherlock")!= -1) {
+            document.getElementById("watson").style.display = "all";
+
+            $.post('/get_reports', // url
+              function (data, textStatus, jqXHR) {  // success callback
+               var string_to_print = "<b>Report</b><br><br>&nbsp;<br>"
+               if(data.discovery){
+                  string_to_print += "Discovered Hosts from discovery.sherlock:<br>"
+                  data.discovery.forEach(function(hst){
+                     string_to_print += ` - ${hst} <br>`
+                  })
+               }
+               document.getElementById("watson").scrollIntoView(); 
+               string_to_print += "<br>&nbsp;<br>"
+               if(data.scan) {
+                  string_to_print += "Discovered Ports from scan.sherlock:<br>"
+                  Object.keys(data.scan).forEach(function(a_key){
+                     string_to_print += `- ${a_key}: <br>`
+                     data.scan[a_key].forEach(function(prt){
+                        string_to_print += `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - ${a_key}:${prt} <br>`
+                     })
+                  })
+               string_to_print += "<br>&nbsp;<br>"
+               }
+               if(!data.discovery && !data.scan) {
+                  string_to_print += `<br>No reports "discovery.sherlock" and "scan.sherlock" found on backend!<br>`
+               }
+               $('#watson').html(string_to_print);
+            });
+         } else {
+            document.getElementById("watson").style.display = "none"; 
+         }
+    });
+</script>
+
+    </body>
+    <!-- Footer -->
+    <footer class="page-footer font-small blue pt-4">
+       <div class="container-fluid text-center text-md-left">
+          <div class="row">
+             <div class="col-md-6 mt-md-0 mt-3">
+                <h5>Sherlock - Network Forensics</h5>
+                <p>Implemented as part of 2019 MSIT BIDA  <a href="https://api.heinz.cmu.edu/media/95-898_272.pdf" target="_blank">course</a>.</p>
+             </div>
+             <div class="col-md-3 mb-md-0 mb-3"></div>
+             <div class="col-md-3 mb-md-0 mb-3">
+                <h5>Info</h5>
+                <ul class="list-unstyled">
+                   <li>
+                      <a href="https://github.com/ankitgyawali/sherlock" target="_blank">Github</a>
+                   </li>
+                   <li>
+                      <a href="https://api.heinz.cmu.edu/media/95-898_272.pdf" target="_blank">CMU</a>
+                   </li>
+                </ul>
+             </div>
+          </div>
+       </div>
+       <div class="footer-copyright text-center py-3">© 2019 Copyright: <a href="https://github.com/ankitgyawali/sherlock" target="_blank"> Sherlock</a> </div>
+    </footer>
+    <!-- Footer -->
+ </html>
+ 
+ 

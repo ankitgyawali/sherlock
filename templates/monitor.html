@@ -1,0 +1,137 @@
+<html>
+    <head>
+        <title>
+            Sherlock - Interact
+        </title>
+    
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+         <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    </head>
+
+    <body>
+        
+        <div class="alert alert-primary" role="alert">
+            <h1> <center> Sherlock - Monitoring host for ports </center> </h1>
+          </div>
+
+          <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+              <h1 class="display-4">Interact with identified hosts</h1>
+              <a href="/">Go back to control center</a><br><br>
+              <p class="lead">Port State for <b>{{ request.args.get('ipadr') }}</b>:
+            
+                
+
+
+                <div class="alert alert-success" id="no-change" role="alert">
+                        NO change detected on this host.
+                      </div>
+                      <div class="alert alert-danger" id="yes-change" role="alert">
+                        WARNING! Change detected on available port on host!
+                      </div>
+
+                <p id="port_state">
+
+                </p>
+              </p>
+
+
+
+              <p>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+
+              Simply return to control center if you would like to deactivate monitoring.
+              <p><br></p>
+              <button class="btn btn-primary" type="button" id="resetalert">RESET ALERT NOTIFICATION</button> 
+            </p>
+         
+
+            </div>
+
+
+            
+          </div>
+
+
+
+    </body>
+
+
+
+    <script type="text/javascript"> 
+        $(document).ready(function() {
+            var SEC_INTERVAL = 3;
+            var MAX_RECORDS = 10;
+            var PORT_DATA = []
+            let reset = true
+            $('#resetalert').on('click', function() {
+                $('#no-change').show();
+                $('#yes-change').hide();
+                reset = true;
+            });
+            $('#no-change').show();
+            $('#yes-change').hide();
+            setInterval(function() {
+                $.post('/get_ports',  { ipadr: "{{ request.args.get('ipadr') }}" }, function (data, textStatus, jqXHR) {  
+                    PORT_DATA.push(data.ports.join(", ") + " - " + new Date().toString())
+                    PORT_DATA = PORT_DATA.sort(function(a,b) {  return new Date(a.split(" - ")[1]).getTime() > new Date(b.split(" - ")[1]).getTime()   }).reverse()
+                    $('#port_state').html(PORT_DATA.join("\n\n<br>"));
+
+                    if(PORT_DATA.length > 2) {
+                        if(reset && (PORT_DATA[0].split(" - ")[0] ==   PORT_DATA[1].split(" - ")[0])) {
+                            $('#no-change').show();
+                            $('#yes-change').hide();
+                        } else {
+                            reset = false
+                            $('#no-change').hide();
+                            $('#yes-change').show();
+                        }
+                    }
+                    if(PORT_DATA.length > MAX_RECORDS) {
+                        PORT_DATA.length = MAX_RECORDS;
+                    }
+                });
+        }, SEC_INTERVAL * 1000); 
+      });
+  </script>
+
+
+
+    <!-- Footer -->
+<footer class="page-footer font-small blue pt-4"> <div class="container-fluid text-center text-md-left"> <div class="row"> <div class="col-md-6 mt-md-0 mt-3">
+        <h5>Sherlock - Network Forensics</h5>
+        <p>Implemented as part of 2019 MSIT BIDA  <a href="https://api.heinz.cmu.edu/media/95-898_272.pdf" target="_blank">course</a>.</p>
+      </div>
+      <div class="col-md-3 mb-md-0 mb-3"></div>
+     
+      <div class="col-md-3 mb-md-0 mb-3">
+        <h5>Info</h5>
+        <ul class="list-unstyled">
+          <li>
+            <a href="https://github.com/ankitgyawali/sherlock" target="_blank">Github</a>
+          </li>
+          <li>
+            <a href="https://api.heinz.cmu.edu/media/95-898_272.pdf" target="_blank">CMU</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+  <div class="footer-copyright text-center py-3">© 2019 Copyright: <a href="https://github.com/ankitgyawali/sherlock" target="_blank"> Sherlock</a> </div>
+</footer>
+    <!-- Footer -->
+
+
+</html>
