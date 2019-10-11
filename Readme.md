@@ -76,6 +76,12 @@ A basic workflow from root page `/` at default port 5000 would look like:
 
 `docker build -t sherlock .`
 
+`docker tag sherlock sherlock:latest`
+
+`docker login`
+
+`docker push ankitgyawali/sherlock:latest`
+
 ## Others
 
 ### Disabled Pylint(s)
@@ -91,26 +97,26 @@ Disabled try catch all exception - discover.py:
 
 #### CLI
 
-![01 - a - discovery.py - Port sweep.png](/docs/01 - cli/01 - a - discovery.py - Port sweep.png?raw=true "01 - a - discovery.py - Port sweep.png")
+![01-a-discovery.py-Port-sweep.png](/docs/01-cli/01-a-discovery.py-Port-sweep.png?raw=true "01-a-discovery.py-Port-sweep.png")
 
-![01 - b - discovery.py - Port sweep full network.png](/docs/01 - cli/01 - b - discovery.py - Port sweep full network.png?raw=true "01 - b - discovery.py - Port sweep full network.png")
+![01-b-discovery.py-Port-sweep-full-network.png](/docs/01-cli/01-b-discovery.py-Port-sweep-full-network.png?raw=true "01-b-discovery.py-Port-sweep-full-network.png")
 
-![02 - b - scan.py - Port scan.png](/docs/01 - cli/02 - b - scan.py - Port scan.png?raw=true "02 - b - scan.py - Port scan.png")
+![02-b-scan.py-Port-scan.png](/docs/01-cli/02-b-scan.py-Port-scan.png?raw=true "02-b-scan.py-Port-scan.png")
 
-![03 - a - monitor.py - Monitor scan.png](/docs/01 - cli/03 - a - monitor.py - Monitor scan.png?raw=true "03 - a - monitor.py - Monitor scan.png")
+![03-a-monitor.py-Monitor-scan.png](/docs/01-cli/03-a-monitor.py-Monitor-scan.png?raw=true "03-a-monitor.py-Monitor-scan.png")
 
 #### UI
 
-![01 - a - Port swep input.png](/docs/02 - ui/01 - a - Port swep input.png?raw=true "01 - a - Port swep input.png")
+![01-a-Port-sweep-input.png](/docs/02-ui/01-a-Port-sweep-input.png?raw=true "01-a-Port-sweep-input.png")
 
-![01 - b - Port swep output.png](/docs/02 - ui/01 - b - Port swep output.png?raw=true "01 - b - Port swep output.png")
+![01-b-Port-sweep-output.png](/docs/02-ui/01-b-Port-sweep-output.png?raw=true "01-b-Port-sweep-output.png")
 
-![02 - a - Port scan input.png](/docs/02 - ui/02 - a - Port scan input.png?raw=true "02 - a - Port scan input.png")
+![02-a-Port-scan-input.png](/docs/02-ui/02-a-Port-scan-input.png?raw=true "02-a-Port-scan-input.png")
 
-![02 - b - Port scan output.png](/docs/02 - ui/02 - b - Port scan output.png?raw=true "02 - b - Port scan output.png")
+![02-b-Port-scan-output.png](/docs/02-ui/02-b-Port-scan-output.png?raw=true "02-b-Port-scan-output.png")
 
-![02 - c - Port monitor.png](/docs/02 - ui/02 - c - Port monitor.png?raw=true "02 - c - Port monitor.png")
+![02-c-Port-monitor.png](/docs/02-ui/02-c-Port-monitor.png?raw=true "02-c-Port-monitor.png")
 
-![02 - d - Port monitor alerting.png](/docs/02 - ui/02 - d - Port monitor alerting.png?raw=true "02 - d - Port monitor alerting.png")
+![02-d-Port-monitor-alerting.png](/docs/02-ui/02-d-Port-monitor-alerting.png?raw=true "02-d-Port-monitor-alerting.png")
 
-![03 - a - Load Report .png](/docs/02 - ui/03 - a - Load Report .png?raw=true "03 - a - Load Report .png")
+![03-a-Load-Report.png](/docs/02-ui/03-a-Load-Report.png?raw=true "03-a-Load-Report.png")
