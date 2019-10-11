@@ -40,7 +40,16 @@ def map_network(cidr, pool_size):
         threads.start()
 
     # Puts jobs on queue here
-    ip_address = IPNetwork(cidr)
+    ip_address = []
+    cidr_sep = cidr.split(",")
+    for a_cidr in cidr_sep:
+        if a_cidr.count(".") == 3:
+            if not a_cidr.count("/") == 1:
+                ip_address.extend(IPNetwork(a_cidr.strip() + "/32"))
+            else:
+                ip_address.extend(IPNetwork(a_cidr.strip()))
+    if not ip_address:
+        ip_address = ['127.0.0.1']
 
     if(LIMIT_PARALLEL and len(ip_address) > (LIMIT_SIZE+1)):
         ip_address = ip_address[:LIMIT_SIZE]
