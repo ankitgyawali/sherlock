@@ -76,7 +76,7 @@ A basic workflow from root page `/` at default port 5000 would look like:
 
 `docker build -t sherlock .`
 
-`docker tag sherlock sherlock:latest`
+`docker tag sherlock ankitgyawali/sherlock:latest`
 
 `docker login`
 
