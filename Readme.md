@@ -1,12 +1,15 @@
 ## sherlock
 
+
+## Goals
+
 - Tool to perform port sweep & discover hosts on provided cidr block.
 - Performs port scan on specific host.
 - Creates a report of discovered hosts & available ports.
 - Monitoring & alerting agent for a host & port combination.
 
 
-## Testing project features
+## Design & Testing project features
 
 ### CLI Commands
 
@@ -57,7 +60,15 @@ A basic workflow from root page `/` at default port 5000 would look like:
 - Step 10: Option #3 - Simply loads any previously saved reports from `/discover` & `/scan` into the UI if any.
 
 
-## Running project locally
+## Limitations \ Future Work
+
+- Alerting is limited, a more ambitious plug-n-play kind of alerting system for changes in network.
+- Better multi-threading implementation to improve host/port scanning times.
+- More intuitive UI implemented as a SPA.
+- Better outputting of CLI commands to be reusable with crons as input of other scripts.
+
+
+## Running project locally/Usage
 
 ### Running UI as flask app
 
@@ -93,7 +104,7 @@ Disabled try catch all exception - discover.py:
 - pylint: disable=W0702
 
 
-### Screenshots
+### Screenshots/Demo
 
 #### CLI
 
